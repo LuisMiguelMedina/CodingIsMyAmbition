@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="uf-8">
+    <title>Formularios</title>
+    <script>
+        function iniciar() {
+            var boton = document.getElementById("Enviar");
+            boton.addEventListener("click", eviarformulario);
+        }
+
+        function enviarformulario() {
+            var formulario = document.querySelector("form[name='information']");
+            var valido = formulario.checkValidity();
+            if (valido) {
+                formulario.submit();
+            } else {
+                alert("El formulario no puede ser enviado");
+            }
+        }
+        window.addEventListener("load", iniciar);
+    </script>
+</head>
+
+<body>
+    <section>
+        <form name="information" method="get" action="procesar.php">
+            <p><label>Correo:<input type="email" name="correo" id="correo" required></label></p>
+            <p><button type="button" id="enviar">Registrarse</button></p>
+        </form>
+    </section>
+</body>
+
+</html>

@@ -1,12 +1,9 @@
-from importlib.resources import path
-from lib2to3.pgen2 import driver
-from webbrowser import Chrome
 from selenium import webdriver
 import time
 import pandas as pd
 
 def obtener_monedas():
-    path = "C:/Users/luism/OneDrive/Documentos/GitHub/CodingIsMyAmbition/Languages/NOC++"
+    path = "C:/Users/luism/OneDrive/Documentos/GitHub/CodingIsMyAmbition/Languages/NOC++/chromedriver"
     url = "httpa://coinmarket.com"
     tiempo_de_espera = 1
     numero_de_monedas = 10

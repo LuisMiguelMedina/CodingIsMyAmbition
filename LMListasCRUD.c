@@ -11,13 +11,15 @@ struct data_Student{
     char *name;
     char *paternSurname;
     char *maternSurname;
-}; 
+};
+
 typedef struct data_Student Student;
 
 struct Node{
     Student *Student;
     struct Node *next;
-}; 
+};
+
 typedef struct Node Node;
 typedef Node* NodePtr;
 
@@ -26,42 +28,26 @@ Student* addStudents(char *name, char *paternSurname, char *maternSurname);
 void fillStudent(NodePtr *list);
 void InsertAndStart(NodePtr *list, NodePtr studentData);
 void InsertOrganized(NodePtr *list, NodePtr studentData);
-int comparedata(Student *surname1 , Student *surname2);
-void printlist(NodePtr list);
+int compareData(Student *surname1 , Student *surname2);
+void printList(NodePtr list);
 int DeleteNode(NodePtr list, Student *Student);
 void askNameDelete(NodePtr startlist);
 void releaseMemory(NodePtr NodeDeleted);
 void askUpdate(NodePtr startlist);
-void Updatelist(NodePtr startlist, NodePtr StudentDelete, NodePtr StudentReplace);
+void updateList(NodePtr startlist, NodePtr StudentDelete, NodePtr StudentReplace);
 
 int main(){
-    
     NodePtr list;
     NodePtr studentData;
 
     list = NULL;   
-
+    
     fillStudent(&list);
-    printlist(list);
+    printList(list);
     askNameDelete(list);
     askUpdate(list);
-    printlist(list);
+    printList(list);
     free(list);
-}
-
-void askNameDelete(NodePtr startlist){
-    
-    NodePtr NodeDelete;
-   
-    NodeDelete = addNode(addStudents("David","Perez","Cruz"));
-    DeleteNode(startlist, NodeDelete -> Student);
-
-    NodeDelete = addNode(addStudents("Luis","Cruz","Inzunza"));
-    DeleteNode(startlist, NodeDelete -> Student);
-
-    NodeDelete = addNode(addStudents("Luis","Medina","Avila"));
-    DeleteNode(startlist, NodeDelete -> Student);
-
 }
 
 void fillStudent(NodePtr *list){
@@ -71,7 +57,7 @@ void fillStudent(NodePtr *list){
     InsertOrganized(list, addNode(addStudents("Jose Angel","Magana","Garcia")));
     InsertOrganized(list, addNode(addStudents("Carlos","May","Vivas")));
     InsertOrganized(list, addNode(addStudents("Fernando","Joachin","Prieto")));
-    InsertOrganized(list, addNode(addStudents("Luis","Cruz","Inzunza")));
+    InsertOrganized(list, addNode(addStudents("Luis Alejandro","Cruz","Inzunza")));
     InsertOrganized(list, addNode(addStudents("Fernando","Villajuana","Saavedra")));
     InsertOrganized(list, addNode(addStudents("Mariam Guadalupe","Moreno","Farah")));
     InsertOrganized(list, addNode(addStudents("Jose Carlos","Leo","Fernalez")));
@@ -94,7 +80,6 @@ void fillStudent(NodePtr *list){
 NodePtr addNode(Student *Student){
     
     NodePtr newElement;
-
     newElement = (NodePtr)malloc(sizeof(Node));
     newElement -> Student = Student;
     newElement -> next = NULL;
@@ -121,22 +106,20 @@ Student* addStudents(char *name, char *paternSurname, char *maternSurname){
 }
 
 
-void printlist(NodePtr list){
-    
-    int i = 1;
-        if(list == NULL){
-            printf("Empty list");
+void printList(NodePtr list){
+    if(list == NULL){
+        printf("Empty list");
+    }
+    else{
+        while(list != NULL){
+            printf("%s " , list -> Student -> name);
+            printf("%s " , list -> Student -> paternSurname);
+            printf("%s " , list -> Student -> maternSurname);
+            printf("\n");
+            list= list -> next;
         }
-        else{
-            while(list != NULL){
-                printf("%i. %s " ,i, list -> Student -> name);
-                printf("%s " , list -> Student -> paternSurname);
-                printf("%s " , list -> Student -> maternSurname);
-                printf("\n");
-                list= list -> next;
-                i++;
-            }
-        }   
+        printf("\n");
+    }   
 }
 
 void InsertAndStart(NodePtr *list, NodePtr studentData){
@@ -145,7 +128,6 @@ void InsertAndStart(NodePtr *list, NodePtr studentData){
         studentData -> next = *list;
         *list = studentData;
     }
-    
 }
 
 void InsertOrganized(NodePtr *list, NodePtr studentData){
@@ -158,11 +140,11 @@ void InsertOrganized(NodePtr *list, NodePtr studentData){
     if(*list != NULL)
     {
         actual = *list;
-        compared = comparedata(studentData -> Student, actual -> Student);
+        compared = compareData(studentData -> Student, actual -> Student);
 
         while (actual != NULL && compared > 0)
         {
-            compared = comparedata(studentData -> Student, actual -> Student);
+            compared = compareData(studentData -> Student, actual -> Student);
             if(compared > 0){
                 previous = actual;                
                 actual = actual -> next;
@@ -191,7 +173,7 @@ void InsertOrganized(NodePtr *list, NodePtr studentData){
     }            
 }
 
-int comparedata(Student *surname1 , Student *surname2){
+int compareData(Student *surname1 , Student *surname2){
     
     int compared;
     compared = strcmp(surname1 -> paternSurname, surname2 -> paternSurname);
@@ -206,6 +188,61 @@ int comparedata(Student *surname1 , Student *surname2){
     return compared;
 }
 
+void askUpdate(NodePtr startlist){
+    
+    NodePtr NodeUpdate, NodeReplace;
+   
+    NodeUpdate = addNode(addStudents("Luis Alejandro","Cruz","Inzunza"));
+    DeleteNode(startlist, NodeUpdate -> Student);
+
+    NodeReplace = addNode(addStudents("Luis Miguel","Medina","Avila"));
+    DeleteNode(startlist, NodeUpdate -> Student);
+
+    updateList(startlist, NodeUpdate, NodeReplace);
+}
+
+void updateList(NodePtr startlist, Node *StudentDelete, Node *StudentReplace){
+
+    NodePtr actual, previous;
+    int compared, flagDelete = 0;    
+    previous = NULL;
+    actual = startlist;
+
+    while(actual != NULL && flagDelete == 0){
+        compared = compareData(StudentDelete -> Student, actual -> Student );
+        if(compared == 0){ 
+
+            if(previous == NULL){
+                actual = actual -> next;
+            }
+            else {
+                previous -> next = actual -> next;
+                releaseMemory(actual);
+            }
+            flagDelete = 1;
+
+        }else{
+            previous = actual;
+            actual = actual -> next;
+        }
+    }
+    InsertOrganized(&startlist, StudentReplace);
+}
+
+void askNameDelete(NodePtr startlist){
+    
+    NodePtr NodeDelete;
+   
+    NodeDelete = addNode(addStudents("David","Perez","Cruz"));
+    DeleteNode(startlist, NodeDelete -> Student);
+
+    NodeDelete = addNode(addStudents("Luis","Cruz","Inzunza"));
+    DeleteNode(startlist, NodeDelete -> Student);
+
+    NodeDelete = addNode(addStudents("Luis","Medina","Avila"));
+    DeleteNode(startlist, NodeDelete -> Student);
+
+}
 
 int DeleteNode (NodePtr startlist, Student *Student){
     
@@ -215,7 +252,7 @@ int DeleteNode (NodePtr startlist, Student *Student){
     actual = startlist;
 
     while(actual != NULL && flagDelete == 0){
-        compared = comparedata(Student, actual -> Student );
+        compared = compareData(Student, actual -> Student );
         if(compared == 0){ 
 
             if(previous == NULL){
@@ -242,64 +279,4 @@ void releaseMemory(NodePtr NodeDeleted){
     free(NodeDeleted -> Student -> maternSurname);
     free(NodeDeleted -> Student);
     free(NodeDeleted);
-}
-
-void askUpdate(NodePtr startlist){
-    
-    NodePtr NodeUpdate, NodeReplace;
-   
-    NodeUpdate = addNode(addStudents("David Leobardo","Perez","Cruz"));
-    DeleteNode(startlist, NodeUpdate -> Student);
-
-    NodeReplace = addNode(addStudents("Josefino","Detal","Pablo"));
-    DeleteNode(startlist, NodeUpdate -> Student);
-
-    Updatelist(startlist, NodeUpdate, NodeReplace);
-
-
-    NodeUpdate = addNode(addStudents("Adrian","Fonseca","Loria"));
-    DeleteNode(startlist, NodeUpdate -> Student);
-
-    NodeReplace = addNode(addStudents("Lucho","Portus","Casas"));
-    DeleteNode(startlist, NodeUpdate -> Student);
-
-    Updatelist(startlist, NodeUpdate, NodeReplace);
-
-
-    NodeUpdate = addNode(addStudents("Luis Miguel","Medina","Avila"));
-    DeleteNode(startlist, NodeUpdate -> Student);
-
-    NodeReplace = addNode(addStudents("Panfilo","Clodomiro","Urriaga"));
-    DeleteNode(startlist, NodeUpdate -> Student);
-
-    Updatelist(startlist, NodeUpdate, NodeReplace);
-   
-}
-
-void Updatelist(NodePtr startlist, Node *StudentDelete, Node *StudentReplace){
-
-    NodePtr actual, previous;
-    int compared, flagDelete = 0;    
-    previous = NULL;
-    actual = startlist;
-
-    while(actual != NULL && flagDelete == 0){
-        compared = comparedata(StudentDelete -> Student, actual -> Student );
-        if(compared == 0){ 
-
-            if(previous == NULL){
-                actual = actual -> next;
-            }
-            else {
-                previous -> next = actual -> next;
-                releaseMemory(actual);
-            }
-            flagDelete = 1;
-
-        }else{
-            previous = actual;
-            actual = actual -> next;
-        }
-    }
-    InsertOrganized(&startlist, StudentReplace);
 }

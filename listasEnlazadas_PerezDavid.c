@@ -9,7 +9,6 @@ struct Datos_Alumno{
 }; 
 typedef struct Datos_Alumno Alumno;
 
-
 struct Node{
     Alumno *alumno;
     struct Node *siguiente;

@@ -4,21 +4,18 @@ import pandas as pd
 
 def obtener_monedas():
     path = "C:/Users/luism/OneDrive/Documentos/GitHub/CodingIsMyAmbition/Languages/NOC++/chromedriver"
-    url = "httpa://coinmarket.com"
-    tiempo_de_espera = 1
-    numero_de_monedas = 10
+    url = 'https://coinmarketcap.com' 
     monedas = []
+
     options = webdriver.ChromeOptions()
     driver = webdriver.Chrome(executable_path=path,options=options)
     driver.set_window_size(1120, 1000)
     driver.get(url)
+    time.sleep(5)
 
-    time.sleep(tiempo_de_espera)
+    for i in range(10): 
 
-
-    for i in range(numero_de_monedas): 
-
-        time.sleep(tiempo_de_espera)
+        time.sleep(1)
 
         recolectado = False
 
@@ -33,11 +30,11 @@ def obtener_monedas():
                 print("Recolecto correctamente: "+str(i+1))
             except:
                 print("Fallo la coleccion")
-                time.sleep(tiempo_de_espera)
+                time.sleep(1)
 
         monedas.append({"Posicion de moneda" : posicion,"Nombre de moneda" : nombre,"Siglas" : siglas,"Precio" : precio})
 
     return pd.DataFrame(monedas)
 
     df = obtener_monedas()
-    df.to_csv('crypto.csv',index = False)
+    df.to_csv('monedas.csv',index = False)
